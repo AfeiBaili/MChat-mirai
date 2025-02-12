@@ -38,6 +38,7 @@ public final class MChat extends JavaPlugin {
      * @param message 要发送的消息
      */
     public static void send(String message) {
+        MChat.logger.info("收到消息：" + message);
         if (!isClose) {
             GROUPS.forEach(group -> {
                 Group g = bot.getGroup(group);
