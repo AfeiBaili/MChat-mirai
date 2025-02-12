@@ -52,6 +52,7 @@ public final class MChat extends JavaPlugin {
     public void onEnable() {
         logger = getLogger();
         listener();
+        logger.info("MChat加载成功");
     }
 
     public void listener() {
@@ -71,16 +72,15 @@ public final class MChat extends JavaPlugin {
                 String[] strings = message.split(" ");
                 switch (strings[0]) {
                     case "/菜单":
-                        send.sendMessage("""
-                                /m-查看主人
-                                /m-添加主人
-                                /m-删除主人
-                                /m-查看群
-                                /m-添加群
-                                /m-删除群
-                                /m-重新加载
-                                /m-开启聊天
-                                /m-关闭聊天"""
+                        send.sendMessage("/m-查看主人" + "\n" +
+                                "/m-添加主人" + "\n" +
+                                "/m-删除主人" + "\n" +
+                                "/m-查看群" + "\n" +
+                                "/m-添加群" + "\n" +
+                                "/m-删除群" + "\n" +
+                                "/m-重新加载" + "\n" +
+                                "/m-开启聊天" + "\n" +
+                                "/m-关闭聊天"
                         );
                         break;
                     case "/m-查看主人":
