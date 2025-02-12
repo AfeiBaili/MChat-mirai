@@ -95,7 +95,6 @@ public class MChatSocket {
     }
 
     public void send(String message) {
-        MChat.logger.info("发送消息：" + message);
         Set<SelectionKey> keys = selector.keys();
         keys.forEach(key -> {
             SelectableChannel channel = key.channel();
