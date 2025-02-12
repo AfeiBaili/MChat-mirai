@@ -50,7 +50,7 @@ public class MChatSocket {
                                 SocketChannel socket = serverSocket.accept();
                                 socket.configureBlocking(false);
                                 socket.register(selector, SelectionKey.OP_READ);
-                                MChat.send("MChat连接至服务器：" + socket.getRemoteAddress());
+                                MChat.send("MChat成功连接至服务器");
                             }
                             if (key.isReadable()) {
                                 SocketChannel channel = (SocketChannel) key.channel();
@@ -105,7 +105,7 @@ public class MChatSocket {
                     socketChannel.write(ByteBuffer.wrap(message.getBytes(StandardCharsets.UTF_8)));
                 } catch (IOException e) {
                     try {
-                        MChat.send("远程已断开连接");
+                        MChat.send("MChat客户端已断开连接");
                         socketChannel.close();
                     } catch (IOException ex) {
                         ex.printStackTrace();
