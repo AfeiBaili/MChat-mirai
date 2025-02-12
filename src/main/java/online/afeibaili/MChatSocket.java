@@ -57,7 +57,7 @@ public class MChatSocket {
                                 } catch (IOException ex) {
                                     MChat.logger.info("管道关闭时异常！");
                                 }
-                                MChat.send("管道断开连接！");
+                                MChat.send("远程已断开连接！");
                             }
                         }
                     });
