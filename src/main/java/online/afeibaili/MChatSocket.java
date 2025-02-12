@@ -10,6 +10,25 @@ import java.util.Set;
 public class MChatSocket {
     private Selector selector;
 
+    public MChatSocket() {
+        load();
+    }
+
+    public void unload() {
+        try {
+            selector.keys().forEach(selectionKey -> {
+                try {
+                    selectionKey.channel().close();
+                } catch (IOException e) {
+                    MChat.logger.info("管道关闭时异常！");
+                }
+            });
+            selector.close();
+        } catch (IOException e) {
+            MChat.logger.info("选择器关闭时异常！");
+        }
+    }
+
     public void load() {
         try {
             selector = Selector.open();

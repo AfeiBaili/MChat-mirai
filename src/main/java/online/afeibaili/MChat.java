@@ -17,8 +17,8 @@ public final class MChat extends JavaPlugin {
     public static final MChat INSTANCE = new MChat();
     public static final List<Long> GROUPS = new ArrayList<>();
     public static final List<Long> MASTERS = new ArrayList<>();
-    public static final MChatSocket server = new MChatSocket();
     private static final StringBuffer STRING_BUFFER = new StringBuffer();
+    public static MChatSocket server = new MChatSocket();
     public static MiraiLogger logger;
     private static Bot bot;
     private static Boolean isClose = false;
@@ -34,6 +34,7 @@ public final class MChat extends JavaPlugin {
 
     /**
      * 将消息发送到QQ群聊
+     *
      * @param message 要发送的消息
      */
     public static void send(String message) {
@@ -51,7 +52,6 @@ public final class MChat extends JavaPlugin {
     public void onEnable() {
         logger = getLogger();
         listener();
-        server.load();
     }
 
     public void listener() {
@@ -71,14 +71,16 @@ public final class MChat extends JavaPlugin {
                 String[] strings = message.split(" ");
                 switch (strings[0]) {
                     case "/菜单":
-                        send.sendMessage("/m-查看主人" + "\n" +
-                                "/m-添加主人" + "\n" +
-                                "/m-删除主人" + "\n" +
-                                "/m-查看群" + "\n" +
-                                "/m-添加群" + "\n" +
-                                "/m-删除群" + "\n" +
-                                "/m-开启聊天" + "\n" +
-                                "/m-关闭聊天"
+                        send.sendMessage("""
+                                /m-查看主人
+                                /m-添加主人
+                                /m-删除主人
+                                /m-查看群
+                                /m-添加群
+                                /m-删除群
+                                /m-重新加载
+                                /m-开启聊天
+                                /m-关闭聊天"""
                         );
                         break;
                     case "/m-查看主人":
@@ -140,6 +142,11 @@ public final class MChat extends JavaPlugin {
                     case "/m-开启聊天":
                         send.sendMessage("已开启MChat");
                         isClose = false;
+                        break;
+                    case "/m-重新加载":
+                        server.unload();
+                        server = new MChatSocket();
+                        send.sendMessage("已重新加载");
                         break;
                 }
             }
