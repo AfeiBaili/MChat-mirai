@@ -15,13 +15,13 @@ import java.util.List;
 
 public final class MChat extends JavaPlugin {
     public static final MChat INSTANCE = new MChat();
-
-    public static Bot bot;
-    public static MiraiLogger logger;
     public static final List<Long> GROUPS = new ArrayList<>();
     public static final List<Long> MASTERS = new ArrayList<>();
-    public static Boolean isClose = false;
-    public static final StringBuffer STRING_BUFFER = new StringBuffer();
+    public static final MChatSocket server = new MChatSocket();
+    private static final StringBuffer STRING_BUFFER = new StringBuffer();
+    public static MiraiLogger logger;
+    private static Bot bot;
+    private static Boolean isClose = false;
 
     static {
         GROUPS.add(975709430L);
@@ -29,16 +29,30 @@ public final class MChat extends JavaPlugin {
     }
 
     private MChat() {
-        super(new JvmPluginDescriptionBuilder("onine.afeibaili.mchat", "1.0.0").name("MChat").author("AfeiBaili").build());
+        super(new JvmPluginDescriptionBuilder("onine.afeibaili.mchat", "1.2.0").name("MChat").author("AfeiBaili").build());
+    }
+
+    /**
+     * 将消息发送到QQ群聊
+     * @param message 要发送的消息
+     */
+    public static void send(String message) {
+        if (!isClose) {
+            GROUPS.forEach(group -> {
+                Group g = bot.getGroup(group);
+                if (g != null) {
+                    g.sendMessage(message);
+                }
+            });
+        }
     }
 
     @Override
     public void onEnable() {
         logger = getLogger();
         listener();
-        SocketChat.init();
+        server.load();
     }
-
 
     public void listener() {
         GlobalEventChannel.INSTANCE.subscribeAlways(BotOnlineEvent.class, e -> {
@@ -56,19 +70,30 @@ public final class MChat extends JavaPlugin {
             if (message.charAt(0) == '/') {
                 String[] strings = message.split(" ");
                 switch (strings[0]) {
-                    case "/查看主人":
+                    case "/菜单":
+                        send.sendMessage("/m-查看主人" + "\n" +
+                                "/m-添加主人" + "\n" +
+                                "/m-删除主人" + "\n" +
+                                "/m-查看群" + "\n" +
+                                "/m-添加群" + "\n" +
+                                "/m-删除群" + "\n" +
+                                "/m-开启聊天" + "\n" +
+                                "/m-关闭聊天"
+                        );
+                        break;
+                    case "/m-查看主人":
                         MASTERS.forEach(m -> STRING_BUFFER.append(m).append("\n"));
                         STRING_BUFFER.delete(STRING_BUFFER.length() - 1, STRING_BUFFER.length());
                         send.sendMessage(STRING_BUFFER.toString());
                         STRING_BUFFER.delete(0, STRING_BUFFER.length());
                         break;
-                    case "/查看群":
+                    case "/m-查看群":
                         GROUPS.forEach(g -> STRING_BUFFER.append(g).append("\n"));
                         STRING_BUFFER.delete(STRING_BUFFER.length() - 1, STRING_BUFFER.length());
                         send.sendMessage(STRING_BUFFER.toString());
                         STRING_BUFFER.delete(0, STRING_BUFFER.length());
                         break;
-                    case "/添加主人":
+                    case "/m-添加主人":
                         try {
                             MASTERS.add(Long.parseLong(strings[1]));
                             send.sendMessage("添加成功");
@@ -76,7 +101,7 @@ public final class MChat extends JavaPlugin {
                             send.sendMessage("QQ格式不对, " + ex.getMessage());
                         }
                         break;
-                    case "/删除主人":
+                    case "/m-删除主人":
                         try {
                             if (Long.parseLong(strings[1]) == 2411718391L) {
                                 send.sendMessage("无法删除阿飞");
@@ -88,7 +113,7 @@ public final class MChat extends JavaPlugin {
                             send.sendMessage("QQ格式不对, " + ex.getMessage());
                         }
                         break;
-                    case "/添加群":
+                    case "/m-添加群":
                         try {
                             GROUPS.add(Long.parseLong(strings[1]));
                             send.sendMessage("添加成功");
@@ -96,7 +121,7 @@ public final class MChat extends JavaPlugin {
                             send.sendMessage("QQ群格式不对, " + ex.getMessage());
                         }
                         break;
-                    case "/删除群":
+                    case "/m-删除群":
                         try {
                             if (Long.parseLong(strings[1]) == 975709430L) {
                                 send.sendMessage("无法删除主群");
@@ -108,11 +133,11 @@ public final class MChat extends JavaPlugin {
                             send.sendMessage("QQ群格式不对, " + ex.getMessage());
                         }
                         break;
-                    case "/关闭聊天":
+                    case "/m-关闭聊天":
                         isClose = true;
                         send.sendMessage("已关闭MChat");
                         break;
-                    case "/开启聊天":
+                    case "/m-开启聊天":
                         send.sendMessage("已开启MChat");
                         isClose = false;
                         break;
@@ -128,19 +153,7 @@ public final class MChat extends JavaPlugin {
             }
             return false;
         }).subscribeAlways(GroupMessageEvent.class, e -> {
-            SocketChat.send(e.getGroup().getName() + " " + e.getSender().getNick() + ": " + e.getMessage().contentToString());
+            server.send(e.getGroup().getName() + " " + e.getSender().getNick() + ": " + e.getMessage().contentToString());
         });
-    }
-
-    //MC发送到群聊
-    public static void send(String message) {
-        if (!isClose) {
-            GROUPS.forEach(group -> {
-                Group g = bot.getGroup(group);
-                if (g != null) {
-                    g.sendMessage(message);
-                }
-            });
-        }
     }
 }
