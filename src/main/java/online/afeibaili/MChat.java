@@ -13,21 +13,24 @@ public final class MChat extends JavaPlugin {
     public static final List<Long> GROUPS = new ArrayList<>();
     public static final List<Long> MASTERS = new ArrayList<>();
     public static MiraiLogger logger;
-    private static Bot bot;
+    static Bot bot;
 
     static {
         GROUPS.add(975709430L);
+        GROUPS.add(962295696L);
         MASTERS.add(2411718391L);
     }
 
     private MChat() {
-        super(new JvmPluginDescriptionBuilder("onine.afeibaili.mchat", "1.2.0").name("MChat").author("AfeiBaili").build());
+        super(new JvmPluginDescriptionBuilder("onine.afeibaili.mchat", "2.0.0").name("MChat").author("AfeiBaili").build());
     }
 
 
     @Override
     public void onEnable() {
         logger = getLogger();
+        Listener.load();
+        SocketHandle.load();
         logger.info("MChat加载成功");
     }
 }
