@@ -50,7 +50,7 @@ public class MChatSocket {
                                 SocketChannel socket = serverSocket.accept();
                                 socket.configureBlocking(false);
                                 socket.register(selector, SelectionKey.OP_READ);
-                                MChat.send("MChat成功连接至服务器");
+                                MChat.send("MChat成功连接至服务器" + socket.getRemoteAddress());
                             }
                             if (key.isReadable()) {
                                 SocketChannel channel = (SocketChannel) key.channel();
