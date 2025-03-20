@@ -24,7 +24,7 @@ public class Listener {
             if (message.charAt(0) == '!') {
                 //todo 命令部分
             }
-            Message.sendToMC(event.getGroup().getName() + name + "：" + message);
+            Message.sendToMC(event.getGroup().getName() + " " + name + "：" + message);
         });
     }
 
