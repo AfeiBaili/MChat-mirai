@@ -51,7 +51,6 @@ public class SocketHandle {
                         BufferedReader reader = new BufferedReader(isr)
                 ) {
                     String message;
-                    if (!reader.readLine().equals("校验050516")) close();
                     while ((message = reader.readLine()) != null) {
                         Message.sendToGroup(message);
                     }
@@ -68,10 +67,14 @@ public class SocketHandle {
                 try {
                     while (true) {
                         socket = server.accept();
-                        Message.sendToGroup("连接成功：" + socket.getRemoteSocketAddress());
 
+                        if (!checkConnection()) {
+                            close();
+                            continue;
+                        }
                         sockets.add(socket);
                         initReceiveMessage();
+                        Message.sendToGroup("连接成功：" + socket.getRemoteSocketAddress());
                     }
                 } catch (IOException e) {
                     Message.sendToGroup("建立连接失败：" + e.getMessage());
@@ -94,6 +97,19 @@ public class SocketHandle {
 
         public void setSocket(Socket socket) {
             this.socket = socket;
+        }
+
+        public boolean checkConnection() {
+            try {
+                InputStream is = socket.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader reader = new BufferedReader(isr);
+                if (reader.readLine().equals("校验050516")) return true;
+            } catch (IOException ignored) {
+                //校验失败处理
+                MChat.logger.info("失败");
+            }
+            return false;
         }
 
         @Override

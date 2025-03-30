@@ -22,7 +22,7 @@ public final class MChat extends JavaPlugin {
     }
 
     private MChat() {
-        super(new JvmPluginDescriptionBuilder("onine.afeibaili.mchat", "2.0.0").name("MChat").author("AfeiBaili").build());
+        super(new JvmPluginDescriptionBuilder("onine.afeibaili.mchat", "2.1.0").name("MChat").author("AfeiBaili").build());
     }
 
 

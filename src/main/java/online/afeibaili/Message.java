@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public class Message {
     public static void sendToGroup(String message) {
+        if (message.trim().isEmpty()) return;
         if (MChat.bot != null) {
             MChat.GROUPS.forEach(gl -> {
                 Optional<Group> group = Optional.ofNullable(MChat.bot.getGroup(gl));
