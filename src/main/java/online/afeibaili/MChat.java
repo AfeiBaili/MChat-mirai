@@ -16,8 +16,8 @@ public final class MChat extends JavaPlugin {
     static Bot bot;
 
     static {
-        GROUPS.add(975709430L);
-//        GROUPS.add(962295696L);
+//        GROUPS.add(975709430L);
+        GROUPS.add(962295696L);
         MASTERS.add(2411718391L);
     }
 
