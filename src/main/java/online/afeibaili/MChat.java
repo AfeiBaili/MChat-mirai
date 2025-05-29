@@ -17,7 +17,7 @@ public final class MChat extends JavaPlugin {
 
     static {
         GROUPS.add(975709430L);
-        GROUPS.add(962295696L);
+//        GROUPS.add(962295696L);
         MASTERS.add(2411718391L);
     }
 
@@ -29,7 +29,9 @@ public final class MChat extends JavaPlugin {
     @Override
     public void onEnable() {
         logger = getLogger();
+        //监听器加载
         Listener.load();
+        //网络连接加载
         SocketHandle.load();
         logger.info("MChat加载成功");
     }
