@@ -34,7 +34,6 @@ object ServerManager {
             server.soTimeout = 10000
             while (isActive) runCatching {
                 val socket: Socket = server.accept()
-                logger.info("客户端连接：${socket.inetAddress.hostAddress}:${socket.port}")
                 socketMap[socket] = Pair(
                     Reader(socket, cipher) { socket.close() },
                     PrintWriter(socket.getOutputStream(), true, StandardCharsets.UTF_8)
