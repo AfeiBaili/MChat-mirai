@@ -64,7 +64,6 @@ object ServerManager {
                 socket.close()
                 runCatching { pair.first.close() }
                 runCatching { pair.second.close() }
-                logger.info("断开连接：${exception.message} | ${socket.inetAddress.hostAddress}:${socket.port}")
                 removeSet.add(socket)
             }
         }
