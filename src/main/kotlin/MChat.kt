@@ -1,8 +1,12 @@
 package online.afeibaili
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescription
 import net.mamoe.mirai.console.plugin.jvm.KotlinPlugin
-import net.mamoe.mirai.utils.info
+import online.afeibaili.config.ConfigManager
+import online.afeibaili.listener.MessageListener
+import online.afeibaili.socket.ServerManager
 
 object MChat : KotlinPlugin(
     JvmPluginDescription(
@@ -13,7 +17,12 @@ object MChat : KotlinPlugin(
         author("AfeiBaili")
     }
 ) {
+    val scope = CoroutineScope(Dispatchers.Default)
+
     override fun onEnable() {
-        logger.info { "Plugin loaded" }
+        ConfigManager.load()
+        MessageListener.load()
+        ServerManager.load()
+        Runtime.getRuntime().addShutdownHook(Thread { ServerManager.unload() })
     }
 }
