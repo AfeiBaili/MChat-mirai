@@ -1,5 +1,6 @@
 package online.afeibaili.config
 
+import online.afeibaili.MChat.logger
 import java.io.File
 import java.io.FileReader
 import java.io.PrintWriter
@@ -31,6 +32,7 @@ object ConfigManager {
                 out.println("# 密钥（用于安全通讯，客户端密钥需和此密钥一致）")
                 out.println("token=${UUID.randomUUID().toString().take(9)}")
             }
+            logger.info("已生成配置文件，请重启进行配置：${file.absolutePath}")
         }
         FileReader(file).use { reader ->
             reader.readLines().forEach { line ->
