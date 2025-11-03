@@ -7,6 +7,7 @@ import online.afeibaili.socket.message.MessageManager
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.Socket
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executors
 
 
@@ -26,7 +27,7 @@ class Reader(socket: Socket, cipher: Cipher, catch: () -> Unit) {
 
         job = scope.launch(dispatcher) {
             runCatching {
-                val reader = BufferedReader(InputStreamReader(socket.getInputStream()))
+                val reader = BufferedReader(InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8))
                 reader.use { reader ->
                     while (isActive) {
                         val readLine: String = reader.readLine()

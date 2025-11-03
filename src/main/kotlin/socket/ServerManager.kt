@@ -9,6 +9,7 @@ import online.afeibaili.socket.message.Message
 import java.io.PrintWriter
 import java.net.ServerSocket
 import java.net.Socket
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executors
 
 
@@ -36,7 +37,7 @@ object ServerManager {
                 logger.info("客户端连接：${socket.inetAddress.hostAddress}:${socket.port}")
                 socketMap[socket] = Pair(
                     Reader(socket, cipher) { socket.close() },
-                    PrintWriter(socket.getOutputStream())
+                    PrintWriter(socket.getOutputStream(), true, StandardCharsets.UTF_8)
                 )
             }
         }
@@ -54,15 +55,19 @@ object ServerManager {
     }
 
     fun send(message: Message) {
+        val removeSet = mutableSetOf<Socket>()
         socketMap.forEach { (socket, pair) ->
             runCatching {
+                if (socket.isClosed) throw RuntimeException("套接字已断开连接！")
                 pair.second.println(cipher.encrypt(message.toString()))
-            }.onFailure {
+            }.onFailure { exception ->
                 socket.close()
                 runCatching { pair.first.close() }
                 runCatching { pair.second.close() }
-                socketMap.remove(socket)
+                logger.info("断开连接：${exception.message} | ${socket.inetAddress.hostAddress}:${socket.port}")
+                removeSet.add(socket)
             }
         }
+        removeSet.forEach { socketMap.remove(it) }
     }
 }

@@ -47,7 +47,7 @@ object ConfigManager {
     }
 
     private fun match(param: String, value: String) = when (param) {
-        "group" -> {
+        "groups" -> {
             val strings: List<String> = value.split(",").map { it -> it.trim() }
             val longs: List<Long> = strings.map { it.toLong() }
             groups.addAll(longs)
