@@ -1,7 +1,6 @@
 package online.afeibaili.socket.message
 
 import net.mamoe.mirai.Bot
-import online.afeibaili.MChat.logger
 import online.afeibaili.config.ConfigManager
 import online.afeibaili.socket.ServerManager
 
@@ -21,7 +20,6 @@ object MessageManager {
     }
 
     suspend fun sendToGroup(message: String) {
-        logger.info("MChat消息: $message")
         ConfigManager.groups.forEach { group -> bot.getGroup(group)?.sendMessage(message) }
     }
 
