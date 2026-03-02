@@ -5,7 +5,6 @@ import net.mamoe.mirai.event.events.BotOnlineEvent
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import online.afeibaili.config.ConfigManager
 import online.afeibaili.socket.message.MessageManager
-import online.afeibaili.socket.message.TextMessage
 
 
 /**
@@ -22,7 +21,8 @@ object MessageListener {
                 val message: String = event.message.contentToString()
                 val name: String = event.sender.nick
                 val groupName = event.group.name
-                MessageManager.sendToMC(TextMessage("$groupName $name：$message"))
+
+                MessageManager.parseGroupMessage(name, groupName, message)
             }
 
         GlobalEventChannel.subscribeAlways<BotOnlineEvent> { event ->

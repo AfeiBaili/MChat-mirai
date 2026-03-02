@@ -28,8 +28,7 @@ object ServerManager {
 
     fun load() {
         server = ServerSocket(ConfigManager.port)
-        val dispatcher: ExecutorCoroutineDispatcher =
-            Executors.newSingleThreadExecutor().asCoroutineDispatcher()
+        val dispatcher: ExecutorCoroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
         serverJob = scope.launch(dispatcher) {
             server.soTimeout = 10000
             while (isActive) runCatching {
@@ -53,17 +52,22 @@ object ServerManager {
         logger.info("已关闭MChat服务器")
     }
 
-    fun send(message: Message) {
+    /**
+     * @param socket 如果消息从服务器传来
+     */
+    fun send(message: Message, socket: Socket? = null) {
         val removeSet = mutableSetOf<Socket>()
-        socketMap.forEach { (socket, pair) ->
+        socketMap.forEach { (pairSocket, pair) ->
             runCatching {
-                if (socket.isClosed) throw RuntimeException("套接字已断开连接！")
-                pair.second.println(cipher.encrypt(message.toString()))
+                if (pairSocket.isClosed) throw RuntimeException("套接字已断开连接！")
+                if (socket != null) {
+                    if (pairSocket != socket) pair.second.println(cipher.encrypt(message.toString()))
+                } else pair.second.println(cipher.encrypt(message.toString()))
             }.onFailure { exception ->
-                socket.close()
+                pairSocket.close()
                 runCatching { pair.first.close() }
                 runCatching { pair.second.close() }
-                removeSet.add(socket)
+                removeSet.add(pairSocket)
             }
         }
         removeSet.forEach { socketMap.remove(it) }

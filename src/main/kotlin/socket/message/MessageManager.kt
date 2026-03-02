@@ -3,6 +3,7 @@ package online.afeibaili.socket.message
 import net.mamoe.mirai.Bot
 import online.afeibaili.config.ConfigManager
 import online.afeibaili.socket.ServerManager
+import java.net.Socket
 
 
 /**
@@ -23,10 +24,20 @@ object MessageManager {
         ConfigManager.groups.forEach { group -> bot.getGroup(group)?.sendMessage(message) }
     }
 
-    suspend fun parseMessage(message: String) {
+    suspend fun parseMessage(message: String, socket: Socket) {
         val ident: String = message.take(4)
         val message: String = message.drop(4)
         val msg: Message? = match(ident, message)
+        //多服务器共享
+        if (msg is TextMessage) ServerManager.send(msg, socket)
+    }
+
+    fun parseGroupMessage(nick: String, groupName: String, message: String) {
+        if (message.startsWith("!")) {
+            sendToMC(CommandMessage(message.drop(1)))
+        } else {
+            sendToMC(TextMessage("$groupName ${nick}：$message"))
+        }
     }
 
     suspend fun match(ident: String, message: String) = when (ident) {

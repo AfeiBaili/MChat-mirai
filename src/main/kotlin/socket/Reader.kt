@@ -18,7 +18,7 @@ import java.util.concurrent.Executors
  *@version 2025/11/3 23:22
  */
 
-class Reader(socket: Socket, cipher: Cipher, catch: () -> Unit) {
+class Reader(val socket: Socket, cipher: Cipher, catch: () -> Unit) {
     val job: Job
 
     init {
@@ -31,7 +31,7 @@ class Reader(socket: Socket, cipher: Cipher, catch: () -> Unit) {
                 reader.use { reader ->
                     while (isActive) {
                         val readLine: String = reader.readLine()
-                        MessageManager.parseMessage(cipher.decrypt(readLine))
+                        MessageManager.parseMessage(cipher.decrypt(readLine), socket)
                     }
                 }
             }.onFailure { catch.invoke() }

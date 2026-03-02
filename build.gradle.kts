@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "online.afeibaili"
-version = "3.0.1"
+version = "3.1.0"
 
 repositories {
     maven("https://maven.aliyun.com/repository/public")
@@ -15,6 +15,6 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     testImplementation(kotlin("test"))
 }
