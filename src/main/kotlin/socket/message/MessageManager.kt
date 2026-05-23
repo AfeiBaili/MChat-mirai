@@ -40,6 +40,10 @@ object MessageManager {
         }
     }
 
+    fun sendImageToMc(url: String) {
+        sendToMC(ImageMessage(url))
+    }
+
     suspend fun match(ident: String, message: String) = when (ident) {
         "txt:" -> TextMessage(message).apply {
             sendToGroup(this.message)
@@ -47,6 +51,7 @@ object MessageManager {
 
         "cmd:" -> CommandMessage(message)
         "het:" -> HeartbeatMessage(message)
+        "img" -> ImageMessage(message)
         else -> null
     }
 }
