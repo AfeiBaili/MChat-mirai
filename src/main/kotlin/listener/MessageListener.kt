@@ -20,15 +20,14 @@ object MessageListener {
     fun load() {
         GlobalEventChannel.filter { event -> event is GroupMessageEvent && ConfigManager.groups.contains(event.group.id) }
             .subscribeAlways<GroupMessageEvent> { event ->
+                val name: String = event.sender.nick
+                val groupName = event.group.name
+                val message: String = event.message.contentToString()
+                MessageManager.parseGroupMessage(name, groupName, message)
+
                 event.message.forEach { message ->
                     if (message is Image) MessageManager.sendImageToMc(message.queryUrl())
                 }
-
-                val message: String = event.message.contentToString()
-                val name: String = event.sender.nick
-                val groupName = event.group.name
-
-                MessageManager.parseGroupMessage(name, groupName, message)
             }
 
         GlobalEventChannel.subscribeAlways<BotOnlineEvent> { event ->

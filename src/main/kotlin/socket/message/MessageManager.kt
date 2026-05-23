@@ -51,7 +51,7 @@ object MessageManager {
 
         "cmd:" -> CommandMessage(message)
         "het:" -> HeartbeatMessage(message)
-        "img" -> ImageMessage(message)
+        "img:" -> ImageMessage(message)
         else -> null
     }
 }
